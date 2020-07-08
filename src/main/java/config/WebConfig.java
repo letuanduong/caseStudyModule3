@@ -1,5 +1,6 @@
 package config;
 
+import model.Product;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
@@ -24,6 +25,8 @@ import org.thymeleaf.spring4.SpringTemplateEngine;
 import org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
+import service.IService;
+import service.impl.ProductServiceImpl;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -33,7 +36,7 @@ import java.util.Properties;
 @Configuration
 @EnableWebMvc
 @EnableTransactionManagement
-@EnableJpaRepositories("repository")
+@EnableJpaRepositories("repositories")
 @ComponentScan("controller")
 @EnableSpringDataWebSupport
 public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationContextAware  {
@@ -44,6 +47,14 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
     }
+
+
+    @Bean
+    public IService<Product> productIService(){
+        return new ProductServiceImpl();
+    }
+
+//    ###########################################################################
 
     //Thymeleaf Configuration
     @Bean
@@ -70,17 +81,9 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
         return viewResolver;
     }
 
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/resources/**").addResourceLocations("/resources/images");
-        registry.addResourceHandler("/resources/**").addResourceLocations("/resources/css");
-        registry.addResourceHandler("/resources/**").addResourceLocations("/resources/img");
-//        registry.addResourceHandler("/js/**").addResourceLocations("/js/**");
-//        registry.addResourceHandler("/sound/**").addResourceLocations("/sound/**");
-//        registry.addResourceHandler("/fonts/**").addResourceLocations("/fonts/**");
-    }
 
 
+//###################################################################################
 //JPA configuration
     @Bean
     @Qualifier(value = "entityManager")
@@ -93,7 +96,6 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource());
         em.setPackagesToScan(new String[]{"model"});
-
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         em.setJpaVendorAdapter(vendorAdapter);
         em.setJpaProperties(additionalProperties());
@@ -104,7 +106,7 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
     public DataSource dataSource(){
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/cms1");
+        dataSource.setUrl("jdbc:mysql://localhost:3306/case4");
         dataSource.setUsername( "root" );
         dataSource.setPassword( "111333" );
         return dataSource;
@@ -123,5 +125,21 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
         return properties;
     }
+
+//#######################################################################################
+//    Config resource
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/resources/**").addResourceLocations("/resources/images");
+        registry.addResourceHandler("/resources/**").addResourceLocations("/resources/css");
+        registry.addResourceHandler("/resources/**").addResourceLocations("/resources/img");
+//        registry.addResourceHandler("/js/**").addResourceLocations("/js/**");
+//        registry.addResourceHandler("/sound/**").addResourceLocations("/sound/**");
+//        registry.addResourceHandler("/fonts/**").addResourceLocations("/fonts/**");
+    }
+
+
+//   ###################################################################################
+
 
 }
