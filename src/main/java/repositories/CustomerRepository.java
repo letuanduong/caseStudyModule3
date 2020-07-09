@@ -1,7 +1,10 @@
 package repositories;
 
-import model.Customer;
-import org.springframework.data.repository.PagingAndSortingRepository;
+import model.User;
+import org.springframework.data.repository.CrudRepository;
 
-public interface CustomerRepository extends PagingAndSortingRepository<Customer, Long> {
+import java.util.Optional;
+
+public interface CustomerRepository extends CrudRepository<User, Long> {
+    Optional<User> findByEmail(String email);
 }

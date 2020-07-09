@@ -43,7 +43,7 @@
       <div class="row">
         <div class="col-md-8 col-md-offset-2">
 
-          <form class="contact-form php-mail-form" role="form" action="contactform/contactform.php" method="POST">
+          <form class="contact-form php-mail-form" userRole="form" action="contactform/contactform.php" method="POST">
 
             <div class="form-group">
               <label for="contact-name">Your Name</label>

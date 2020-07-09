@@ -221,7 +221,7 @@
           <filter-element type="RESERVED_WORD" id="datatype" selected="true" />
           <filter-element type="RESERVED_WORD" id="exception" selected="true" />
           <filter-element type="OBJECT" id="schema" selected="true" />
-          <filter-element type="OBJECT" id="role" selected="true" />
+          <filter-element type="OBJECT" id="userRole" selected="true" />
           <filter-element type="OBJECT" id="user" selected="true" />
           <filter-element type="OBJECT" id="privilege" selected="true" />
           <user-schema>
@@ -284,7 +284,7 @@
           <filter-element type="RESERVED_WORD" id="exception" selected="true" />
           <filter-element type="OBJECT" id="schema" selected="true" />
           <filter-element type="OBJECT" id="user" selected="true" />
-          <filter-element type="OBJECT" id="role" selected="true" />
+          <filter-element type="OBJECT" id="userRole" selected="true" />
           <filter-element type="OBJECT" id="privilege" selected="true" />
           <user-schema>
             <filter-element type="OBJECT" id="table" selected="true" />
@@ -359,7 +359,7 @@
         <sorting-element type="OBJECT" id="cluster" />
         <sorting-element type="OBJECT" id="dblink" />
         <sorting-element type="OBJECT" id="schema" />
-        <sorting-element type="OBJECT" id="role" />
+        <sorting-element type="OBJECT" id="userRole" />
         <sorting-element type="OBJECT" id="user" />
         <sorting-element type="RESERVED_WORD" id="function" />
         <sorting-element type="RESERVED_WORD" id="parameter" />

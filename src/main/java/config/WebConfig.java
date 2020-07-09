@@ -1,13 +1,14 @@
 package config;
 
-import model.Product;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -15,31 +16,39 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 import org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
-import service.IService;
-import service.impl.ProductServiceImpl;
+import repositories.RoleRepository;
+import repositories.UserRepository;
+import service.RoleService;
+import service.UserService;
+import service.impl.RoleServiceImpl;
+import service.impl.UserServiceImpl;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
+import javax.xml.validation.Validator;
 import java.util.Properties;
 
 @Configuration
 @EnableWebMvc
 @EnableTransactionManagement
-@EnableJpaRepositories("repositories")
-@ComponentScan("controller")
 @EnableSpringDataWebSupport
-public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationContextAware  {
+@ComponentScan("controller")
+@EnableJpaRepositories("repositories")
+public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationContextAware {
 
     private ApplicationContext applicationContext;
 
@@ -47,14 +56,6 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
     }
-
-
-    @Bean
-    public IService<Product> productIService(){
-        return new ProductServiceImpl();
-    }
-
-//    ###########################################################################
 
     //Thymeleaf Configuration
     @Bean
@@ -81,10 +82,7 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
         return viewResolver;
     }
 
-
-
-//###################################################################################
-//JPA configuration
+    //JPA configuration
     @Bean
     @Qualifier(value = "entityManager")
     public EntityManager entityManager(EntityManagerFactory entityManagerFactory) {
@@ -107,8 +105,8 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
         dataSource.setUrl("jdbc:mysql://localhost:3306/case4");
-        dataSource.setUsername( "root" );
-        dataSource.setPassword( "111333" );
+        dataSource.setUsername("root");
+        dataSource.setPassword("111333");
         return dataSource;
     }
 
@@ -126,8 +124,15 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
         return properties;
     }
 
-//#######################################################################################
-//    Config resource
+    @Bean
+    public MessageSource messageSource() {
+        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+        messageSource.setBasenames("messages");
+        return messageSource;
+    }
+
+//    ##################################################################
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/resources/**").addResourceLocations("/resources/images");
@@ -138,8 +143,20 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
 //        registry.addResourceHandler("/fonts/**").addResourceLocations("/fonts/**");
     }
 
+//    #####################################################################
 
-//   ###################################################################################
+    @Bean
+    public SpringSecurityDialect securityDialect(){
+        return new SpringSecurityDialect();
+    }
+
+    @Bean
+    public UserService userService(){ return new UserServiceImpl(); }
+
+    @Bean
+    public RoleService roleService() { return new RoleServiceImpl(); }
 
 
 }
+
+

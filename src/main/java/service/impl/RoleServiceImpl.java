@@ -1,30 +1,34 @@
 package service.impl;
 
 import model.Role;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import service.IService;
+import org.springframework.beans.factory.annotation.Autowired;
+import repositories.RoleRepository;
+import service.RoleService;
 
 import java.util.List;
 
-public class RoleServiceImpl implements IService<Role> {
+public class RoleServiceImpl implements RoleService {
+
+    @Autowired
+    private RoleRepository roleRepository;
+
     @Override
     public List<Role> findAll() {
-        return null;
+        return (List<Role>) roleRepository.findAll();
     }
 
     @Override
     public Role findById(Long id) {
-        return null;
+        return roleRepository.findOne(id);
     }
 
     @Override
     public void save(Role role) {
-
+        roleRepository.save(role);
     }
 
     @Override
-    public void remove(Long id) {
-
+    public void delete(Long id) {
+        roleRepository.delete(id);
     }
 }

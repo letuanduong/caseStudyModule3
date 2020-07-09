@@ -11,10 +11,7 @@ public class Product {
     private Long id;
 
     private String name;
-
     private String category;
-
-
     private Long price;
     private Long mount;
 
